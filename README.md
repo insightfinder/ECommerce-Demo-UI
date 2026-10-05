@@ -8,7 +8,7 @@ in the browser, in the browser console and in nginx's JSON access log, all tied
 together by one request id.
 
 ```
-uiserver/
+ECommerce-Demo-UI/
   web/                    Vite project (index.html, src/, package.json)
   nginx/nginx.conf        main config: JSON access log, request-id map, gzip
   nginx/conf.d/store.conf site config (a template: ${APISERVER_ADDR}, ${MONITORING_CIDR})

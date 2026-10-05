@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the Demo Store UI and install it into the system nginx on an Ubuntu host
 # (22.04 / 24.04, e.g. an EC2 instance). Run as a normal user with sudo rights,
-# from anywhere inside the uiserver/ directory:
+# from a checkout of this repository:
 #
 #   APISERVER_ADDR=10.0.1.23:8000 MONITORING_CIDR=10.0.0.0/16 ./deploy/install.sh
 #
