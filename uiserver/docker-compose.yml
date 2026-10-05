@@ -1,0 +1,34 @@
+# Local development: the UI (nginx + built SPA) in front of the mock API.
+#   docker compose up --build        → http://localhost:8080
+# Simulate failures:
+#   http://localhost:8080/?simulate=slow   (or error / timeout), per browser tab
+#   curl -X PUT 'localhost:8000/__mock/simulate?mode=error'   (all clients; mode=off to clear)
+#   MOCK_SIMULATE=slow docker compose up                       (from start)
+services:
+  apiserver:
+    image: node:22-alpine
+    working_dir: /mock
+    command: ["node", "server.js"]
+    volumes:
+      - ./mock:/mock:ro
+    environment:
+      MOCK_SIMULATE: ${MOCK_SIMULATE:-}
+      SLOW_MS: ${SLOW_MS:-3000}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8000/healthz"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+
+  ui:
+    build: .
+    environment:
+      APISERVER_ADDR: apiserver:8000
+      MONITORING_CIDR: ${MONITORING_CIDR:-172.16.0.0/12}
+    ports:
+      - "8080:80"
+    depends_on:
+      apiserver:
+        condition: service_healthy
